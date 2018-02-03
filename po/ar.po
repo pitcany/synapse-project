@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: synapse-project\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-10-06 09:37+0000\n"
-"PO-Revision-Date: 2013-09-17 00:52+0000\n"
-"Last-Translator: سند <0sanad0@gmail.com>\n"
+"POT-Creation-Date: 2017-02-18 21:40+0000\n"
+"PO-Revision-Date: 2017-10-20 08:01+0000\n"
+"Last-Translator: Sarmad Abdullah <sarmadka@gmail.com>\n"
 "Language-Team: Badry Darkoush\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2016-10-07 05:56+0000\n"
-"X-Generator: Launchpad (build 18217)\n"
+"X-Launchpad-Export-Date: 2017-10-21 05:52+0000\n"
+"X-Generator: Launchpad (build 18484)\n"
 "Language: ar\n"
 
 #: ../data/synapse.desktop.in.h:1
@@ -69,7 +69,7 @@ msgstr "ڤيديو"
 
 #: ../src/ui/category.vala:74
 msgid "Contacts"
-msgstr ""
+msgstr "المراسَلون"
 
 #: ../src/ui/category.vala:75 ../src/ui/category.vala:117
 msgid "Internet"
@@ -436,23 +436,23 @@ msgstr "أرسل رسالة إلى صلة ما"
 
 #: ../src/plugins/chat-actions-plugin.vala:134
 msgid "Chat actions"
-msgstr ""
+msgstr "أوامر الدردشة"
 
 #: ../src/plugins/chat-actions-plugin.vala:135
 msgid "Open chat, or send a message with your favorite IM"
-msgstr ""
+msgstr "افتح دردشة أو أرسل رسالة باستخدام تطبيق المراسلة المفضل"
 
 #: ../src/plugins/chromium-plugin.vala:66
 msgid "Chromium Plugin"
-msgstr ""
+msgstr "إضافة كروميوم"
 
 #: ../src/plugins/chromium-plugin.vala:67
 msgid "Browse and open Chromium bookmarks."
-msgstr ""
+msgstr "تصفح وافتح علامات كروميوم"
 
 #: ../src/plugins/chromium-plugin.vala:71
 msgid "Chromium is not installed"
-msgstr ""
+msgstr "متصفح كروميوم غير منصب"
 
 #: ../src/plugins/command-plugin.vala:44
 msgid "Run command"
@@ -479,7 +479,7 @@ msgstr "افتح الخيار الحالي بواسطة %s"
 #: ../src/plugins/desktop-file-plugin.vala:280
 #, c-format
 msgid "Launch action '%s'"
-msgstr ""
+msgstr "أمر التشغيل '%s'"
 
 #: ../src/plugins/devhelp-search.vala:59
 msgid "Search in Devhelp"
@@ -511,7 +511,7 @@ msgstr "ابحث عن تعريفات للكلمات."
 
 #: ../src/plugins/dictionary.vala:78
 msgid "No compatible Dictionary installed"
-msgstr ""
+msgstr "لا يوجد قاموس متوافق"
 
 #: ../src/plugins/directory-plugin.vala:111
 msgid "Open commonly used directories."
@@ -519,51 +519,53 @@ msgstr "افتح القواميس المستخدمة عادةً"
 
 #: ../src/plugins/file-op-plugin.vala:40
 msgid "Remove"
-msgstr ""
+msgstr "إحذف"
 
 #: ../src/plugins/file-op-plugin.vala:41
 msgid "Move to Trash"
-msgstr ""
+msgstr "انقل إلى  المهملات"
 
 #: ../src/plugins/file-op-plugin.vala:72
 msgid "Rename to"
-msgstr ""
+msgstr "غيّر التسمية إلى"
 
 #: ../src/plugins/file-op-plugin.vala:73
 msgid "Rename the file to..."
-msgstr ""
+msgstr "غيّر اسم الملف إلى..."
 
 #: ../src/plugins/file-op-plugin.vala:89 ../src/plugins/pidgin-plugin.vala:171
 #, c-format
 msgid "File \"%s\"does not exist."
-msgstr ""
+msgstr "الملف '%s' غير موجود"
 
 #: ../src/plugins/file-op-plugin.vala:101
 #, c-format
 msgid "Cannot move \"%s\" to \"%s\""
-msgstr ""
+msgstr "لا يمكن نقل '%s' إلى '%s'"
 
 #: ../src/plugins/file-op-plugin.vala:125
 msgid "File Operations"
-msgstr ""
+msgstr "عمليات الملفات"
 
 #: ../src/plugins/file-op-plugin.vala:126
 msgid "Copy, Cut, Paste and Delete files"
-msgstr ""
+msgstr "نسخ وقص ولصق وحذف الملفات"
 
 #: ../src/plugins/gnome-bookmarks-plugin.vala:61
 msgid "GNOME Bookmarks Plugin"
-msgstr ""
+msgstr "إضافة علامات جنوم"
 
 #: ../src/plugins/gnome-bookmarks-plugin.vala:62
 msgid "Browse and open GNOME bookmarks."
-msgstr ""
+msgstr "تصفح وافتح علامات جنوم"
 
 #: ../src/plugins/hybrid-search-plugin.vala:62
 msgid ""
 "Improve results returned by the Zeitgeist plugin by looking for similar "
 "files on the filesystem."
 msgstr ""
+"حسّن نتائج العرض المستلمة من إضافة \"Zeitgeist\" بالبحث عن ملفات مشابهة على "
+"النظام"
 
 #: ../src/plugins/imgur-plugin.vala:51
 msgid "Upload to imgur"
@@ -571,17 +573,17 @@ msgstr "إرفع إلى imgur"
 
 #: ../src/plugins/imgur-plugin.vala:52
 msgid "Upload selection to imgur image sharer"
-msgstr ""
+msgstr "ارفع البنود المحددة لـ \"imgur\""
 
 #: ../src/plugins/imgur-plugin.vala:162 ../src/plugins/pastebin-plugin.vala:151
 msgid ""
 "The selection was successfully uploaded and its URL was copied to clipboard."
-msgstr ""
+msgstr "تم الرفع ونُسِخ الرابط إلى حافظة النصوص"
 
 #: ../src/plugins/imgur-plugin.vala:166 ../src/plugins/pastebin-plugin.vala:155
 msgid ""
 "An error occurred during upload, please check the log for more information."
-msgstr ""
+msgstr "حصل خطأ خلال الرفع. راجع ملفات القيد \"log\" لمزيد من المعلومات"
 
 #: ../src/plugins/imgur-plugin.vala:174
 msgid "Synapse - Imgur"
@@ -593,7 +595,7 @@ msgstr ""
 
 #: ../src/plugins/imgur-plugin.vala:230
 msgid "Upload selection to imgur image sharer, and send the link to contact"
-msgstr ""
+msgstr "ارفع الأشياء المحددة إلى \"imgur\" وارسل الرابط إلى جهة اتصال"
 
 #: ../src/plugins/imgur-plugin.vala:263
 msgid "Imgur"
@@ -601,7 +603,7 @@ msgstr "Imgur"
 
 #: ../src/plugins/imgur-plugin.vala:264
 msgid "Share images using imgur."
-msgstr ""
+msgstr "شارك الصور عبر \"imgur\""
 
 #: ../src/plugins/launchpad-plugin.vala:45
 msgid "Authorize with Launchpad"
