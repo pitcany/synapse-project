@@ -955,6 +955,10 @@ msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d دقيقة"
 msgstr[1] "%d دقائق"
+msgstr[2] "%d دقائق"
+msgstr[3] "%d دقائق"
+msgstr[4] "%d دقائق"
+msgstr[5] "%d دقائق"
 
 #: ../src/plugins/zeitgeist-plugin.vala:172
 #, c-format
@@ -962,6 +966,10 @@ msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] "%d ساعة"
 msgstr[1] "%d ساعات"
+msgstr[2] "%d ساعات"
+msgstr[3] "%d ساعات"
+msgstr[4] "%d ساعات"
+msgstr[5] "%d ساعات"
 
 #: ../src/plugins/zeitgeist-plugin.vala:177
 #, c-format
@@ -969,6 +977,10 @@ msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d يوم"
 msgstr[1] "%d أيام"
+msgstr[2] "%d أيام"
+msgstr[3] "%d أيام"
+msgstr[4] "%d أيام"
+msgstr[5] "%d أيام"
 
 #: ../src/plugins/zeitgeist-plugin.vala:182
 #, c-format
@@ -976,6 +988,10 @@ msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] "%d أسبوع"
 msgstr[1] "%d أسابيع"
+msgstr[2] "%d أسابيع"
+msgstr[3] "%d أسابيع"
+msgstr[4] "%d أسابيع"
+msgstr[5] "%d أسابيع"
 
 #: ../src/plugins/zeitgeist-plugin.vala:186
 msgid "long time ago"
