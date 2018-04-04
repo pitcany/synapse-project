@@ -120,29 +120,20 @@ namespace Synapse
 
       if (needs_terminal)
       {
-        var schema = GLib.SettingsSchemaSource.get_default ().lookup ("org.gnome.desktop.default-applications.terminal", true);
+        GLib.SettingsSchema? schema = null;
+        if (DesktopEnvironmentType.GNOME in DesktopFileService.get_default ().get_environment ())
+        {
+          schema = GLib.SettingsSchemaSource.get_default ().lookup ("org.gnome.desktop.default-applications.terminal", true);
+        }
         if (schema != null)
         {
           var settings = new GLib.Settings.full (schema, null, null);
           application_name = settings.get_string ("exec");
         }
 
-        if (Environment.find_program_in_path ("x-terminal-emulator") != null)
+        if (application_name == null && Environment.find_program_in_path ("x-terminal-emulator") != null)
         {
-          // try to determine default terminal application and make exceptions
-          try {
-            Regex regex = new Regex ("[a-zA-Z0-9-_]*");
-
-            Process.spawn_command_line_sync ("sh -c \"cat \\\"$(which x-terminal-emulator)\\\" | grep @ | cut -d$ -f1\"",
-                          out application_name);
-
-            if (!regex.match (application_name))
-              application_name = "x-terminal-emulator";
-
-          } catch (Error e) {
-            warning ("Error: %s\n", e.message);
-            application_name = "x-terminal-emulator";
-          }
+          application_name = "x-terminal-emulator";
         }
 
         if (application_name == null)
