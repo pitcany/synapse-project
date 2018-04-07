@@ -43,7 +43,6 @@ namespace Synapse
     CINNAMON = 1 << 10,
     PANTHEON = 1 << 11,
     OLD   = 1 << 12,
-    UBUNTU = 1 << 13,
 
     ALL   = 0xFFF;
 
@@ -56,10 +55,10 @@ namespace Synapse
         switch (env_up)
         {
           case "GNOME": result |= DesktopEnvironmentType.GNOME; break;
-          case "GNOME-FLASHBACK": result = DesktopEnvironmentType.GNOME; break;
-          case "GNOME-XORG": result = DesktopEnvironmentType.GNOME; break;
-          case "UBUNTU": result = DesktopEnvironmentType.UBUNTU; break;
-          case "UBUNTU-XORG": result = DesktopEnvironmentType.UBUNTU; break;
+          case "GNOME-FLASHBACK": result |= DesktopEnvironmentType.GNOME; break;
+          case "GNOME-XORG": result |= DesktopEnvironmentType.GNOME; break;
+          case "UBUNTU": result |= DesktopEnvironmentType.GNOME; break;
+          case "UBUNTU-XORG": result |= DesktopEnvironmentType.GNOME; break;
           case "KDE": result |= DesktopEnvironmentType.KDE; break;
           case "LXDE": result |= DesktopEnvironmentType.LXDE; break;
           case "MATE": result |= DesktopEnvironmentType.MATE; break;
@@ -285,7 +284,7 @@ namespace Synapse
 
       if (session.has_prefix ("ubuntu"))
       {
-        session_type = DesktopEnvironmentType.UBUNTU;
+        session_type = DesktopEnvironmentType.GNOME;
         session_type_str = "Ubuntu";
       }
       else if (session.has_prefix ("unity"))
