@@ -251,7 +251,7 @@ namespace Synapse
       }
       else
       {
-        var sort_array = new Gee.ArrayList<Gee.Map.Entry<unowned string, int>> ();
+        var sort_array = new Gee.ArrayList<Gee.Map.Entry<string, int>> ();
         int min_hit = int.MAX;
         foreach (var entry in directory_hits.entries)
         {
@@ -262,8 +262,8 @@ namespace Synapse
           if (entry.value > min_hit) sort_array.add (entry);
         }
         sort_array.sort ((a, b) => {
-          unowned Gee.Map.Entry<unowned string, int> e1 = (Gee.Map.Entry<unowned string, int>) a;
-          unowned Gee.Map.Entry<unowned string, int> e2 = (Gee.Map.Entry<unowned string, int>) b;
+          unowned Gee.Map.Entry<string, int> e1 = (Gee.Map.Entry<string, int>) a;
+          unowned Gee.Map.Entry<string, int> e2 = (Gee.Map.Entry<string, int>) b;
           return e2.value - e1.value;
         });
 
