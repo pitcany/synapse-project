@@ -47,18 +47,6 @@ namespace Synapse.Gui
         add_button_tooltip = _("Enable this plugin");
         remove_button_tooltip = _("Disable this plugin");
 
-        var help_button = new Gtk.Button ();
-        help_button.set_image (
-          new Gtk.Image.from_stock (Gtk.Stock.HELP,
-                                    Gtk.IconSize.SMALL_TOOLBAR));
-        help_button.set_tooltip_markup (_("About this plugin"));
-        help_button.clicked.connect (() => {
-          string id = Synapse.Utils.extract_type_name (pi.plugin_type);
-          string address = "http://synapse.zeitgeist-project.com/wiki/index.php?title=Plugins/%s". printf (id);
-          Synapse.Utils.open_uri (address);
-        });
-        add_user_button (help_button);
-
         if (pi.plugin_type.is_a (typeof (Synapse.Configurable)))
         {
           var config_button = new Gtk.Button ();
