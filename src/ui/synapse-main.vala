@@ -42,7 +42,11 @@ namespace Synapse
     private string current_shortcut;
     private ConfigService config;
 #if HAVE_INDICATOR
+#if HAVE_AYATANA_INDICATOR
+    private AyatanaAppIndicator.Indicator indicator;
+#else
     private AppIndicator.Indicator indicator;
+#endif
 #else
     private Gtk.StatusIcon status_icon;
 #endif
@@ -59,8 +63,17 @@ namespace Synapse
       settings = new Gui.SettingsWindow (data_sink, key_combo_config);
       settings.keybinding_changed.connect (this.change_keyboard_shortcut);
 
-      Keybinder.init ();
-      bind_keyboard_shortcut ();
+      /* Initialize keybinder for global shortcuts (X11 only) */
+      string? session_type = GLib.Environment.get_variable ("XDG_SESSION_TYPE");
+      if (session_type != "wayland")
+      {
+        Keybinder.init ();
+        bind_keyboard_shortcut ();
+      }
+      else
+      {
+        message ("Keybinder disabled under Wayland - no global shortcuts available");
+      }
 
       controller = GLib.Object.new (typeof (Gui.Controller),
                                     "data-sink", data_sink,
@@ -119,6 +132,18 @@ namespace Synapse
 #if HAVE_INDICATOR
       // Why Category.OTHER? See >
       // https://bugs.launchpad.net/synapse-project/+bug/685634/comments/13
+#if HAVE_AYATANA_INDICATOR
+      indicator = new AyatanaAppIndicator.Indicator ("synapse", "synapse",
+                                              AyatanaAppIndicator.IndicatorCategory.OTHER);
+
+      indicator.set_menu (indicator_menu);
+      if (settings.indicator_active) indicator.set_status (AyatanaAppIndicator.IndicatorStatus.ACTIVE);
+
+      settings.notify["indicator-active"].connect (() => {
+        indicator.set_status (settings.indicator_active ?
+          AyatanaAppIndicator.IndicatorStatus.ACTIVE : AyatanaAppIndicator.IndicatorStatus.PASSIVE);
+      });
+#else
       indicator = new AppIndicator.Indicator ("synapse", "synapse",
                                               AppIndicator.IndicatorCategory.OTHER);
 
@@ -129,6 +154,7 @@ namespace Synapse
         indicator.set_status (settings.indicator_active ?
           AppIndicator.IndicatorStatus.ACTIVE : AppIndicator.IndicatorStatus.PASSIVE);
       });
+#endif
 #else
       status_icon = new Gtk.StatusIcon.from_icon_name ("synapse");
 
@@ -208,7 +234,12 @@ namespace Synapse
       current_shortcut = key_combo_config.activate;
       message ("Binding activation to %s", current_shortcut);
       settings.set_keybinding (current_shortcut, false);
-      Keybinder.bind (current_shortcut, handle_shortcut, this);
+      /* Keybinder only works on X11 */
+      string? session_type = GLib.Environment.get_variable ("XDG_SESSION_TYPE");
+      if (session_type != "wayland")
+      {
+        Keybinder.bind (current_shortcut, handle_shortcut, this);
+      }
     }
 
     static void handle_shortcut (string key, void* data)
@@ -218,9 +249,18 @@ namespace Synapse
 
     private void change_keyboard_shortcut (string key)
     {
-      Keybinder.unbind (current_shortcut, handle_shortcut);
-      current_shortcut = key;
-      Keybinder.bind (current_shortcut, handle_shortcut, this);
+      /* Keybinder only works on X11 */
+      string? session_type = GLib.Environment.get_variable ("XDG_SESSION_TYPE");
+      if (session_type != "wayland")
+      {
+        Keybinder.unbind (current_shortcut, handle_shortcut);
+        current_shortcut = key;
+        Keybinder.bind (current_shortcut, handle_shortcut, this);
+      }
+      else
+      {
+        current_shortcut = key;
+      }
     }
 
     public void run ()
@@ -283,6 +323,26 @@ namespace Synapse
         load_custom_style ();
         Gtk.init (ref argv);
         Notify.init ("synapse");
+
+        /* Check for Wayland session and warn about limited functionality */
+        string? session_type = GLib.Environment.get_variable ("XDG_SESSION_TYPE");
+        if (session_type == "wayland")
+        {
+          warning ("Running under Wayland. Global keyboard shortcuts will not work.");
+          warning ("For full functionality, please run Synapse under X11 or XWayland.");
+          /* Show notification to user */
+          var notification = new Notify.Notification (
+            "Synapse - Limited Functionality",
+            "Global keyboard shortcuts are not available under Wayland. Use X11 session for full functionality.",
+            "dialog-warning"
+          );
+          notification.set_urgency (Notify.Urgency.NORMAL);
+          try {
+            notification.show ();
+          } catch (Error e) {
+            warning ("Could not show notification: %s", e.message);
+          }
+        }
 
         var app = new GLib.Application ("org.gnome.Synapse", ApplicationFlags.FLAGS_NONE);
         if (!app.register () || app.get_is_remote ()) {

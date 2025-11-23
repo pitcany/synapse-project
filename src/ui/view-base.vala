@@ -30,8 +30,15 @@ namespace Synapse
 
     private void update_wm ()
     {
+      // Check if we're running on X11 or Wayland
       unowned Gdk.X11.Screen? x11_screen = (Gdk.Screen.get_default () as Gdk.X11.Screen);
-      if (x11_screen == null) return;
+      if (x11_screen == null)
+      {
+        // Running on Wayland or other non-X11 backend
+        // Global keybindings won't work, but basic functionality should still work
+        warning ("Running on non-X11 display (likely Wayland). Global keybindings are not supported.");
+        return;
+      }
       string wmname = x11_screen.get_window_manager_name ().down ();
       this.is_kwin = wmname == "kwin";
     }

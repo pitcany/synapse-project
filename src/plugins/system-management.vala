@@ -459,7 +459,7 @@ namespace Synapse
         register_plugin,
         DBusService.get_default ().service_is_available (SystemdObject.UNIQUE_NAME) ||
         DBusService.get_default ().service_is_available (ConsoleKitObject.UNIQUE_NAME),
-        _("ConsoleKit wasn't found")
+        _("Neither systemd-logind nor ConsoleKit was found")
       );
     }
 
