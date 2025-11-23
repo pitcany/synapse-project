@@ -111,19 +111,31 @@ if test "x$enable_zeitgeist" = "xyes" ; then
 fi
 AM_CONDITIONAL(HAVE_ZEITGEIST, test "x$enable_zeitgeist" = "xyes")
 
+dnl Check for AppIndicator - prefer Ayatana variant on modern systems
+use_ayatana_indicator="no"
 if test "x$enable_indicator" = "xauto" ; then
-	PKG_CHECK_EXISTS([appindicator3-0.1],
-	                 enable_indicator="yes",
-	                 enable_indicator="no")
+	PKG_CHECK_EXISTS([ayatana-appindicator3-0.1],
+	                 [enable_indicator="yes"; use_ayatana_indicator="yes"],
+	                 [PKG_CHECK_EXISTS([appindicator3-0.1],
+	                                   enable_indicator="yes",
+	                                   enable_indicator="no")])
 fi
 
 if test "x$enable_indicator" = "xyes" ; then
-	PKG_CHECK_EXISTS([appindicator3-0.1],,
-	                 AC_MSG_ERROR([appindicator3-0.1 is not installed]))
-	PKG_CHECK_MODULES(APP_INDICATOR, appindicator3-0.1)
-	APP_INDICATOR_VALAFLAGS=" --pkg appindicator3-0.1 -D HAVE_INDICATOR"
-	AC_SUBST(APP_INDICATOR_VALAFLAGS)
-	AC_DEFINE(HAVE_INDICATOR, 1, [Have AppIndicator])
+	if test "x$use_ayatana_indicator" = "xyes" || ! pkg-config --exists appindicator3-0.1 ; then
+		PKG_CHECK_EXISTS([ayatana-appindicator3-0.1],,
+		                 AC_MSG_ERROR([ayatana-appindicator3-0.1 is not installed]))
+		PKG_CHECK_MODULES(APP_INDICATOR, ayatana-appindicator3-0.1)
+		APP_INDICATOR_VALAFLAGS=" --pkg ayatana-appindicator3-0.1 -D HAVE_INDICATOR -D HAVE_AYATANA_INDICATOR"
+		AC_SUBST(APP_INDICATOR_VALAFLAGS)
+		AC_DEFINE(HAVE_INDICATOR, 1, [Have AppIndicator])
+		AC_DEFINE(HAVE_AYATANA_INDICATOR, 1, [Have Ayatana AppIndicator])
+	else
+		PKG_CHECK_MODULES(APP_INDICATOR, appindicator3-0.1)
+		APP_INDICATOR_VALAFLAGS=" --pkg appindicator3-0.1 -D HAVE_INDICATOR"
+		AC_SUBST(APP_INDICATOR_VALAFLAGS)
+		AC_DEFINE(HAVE_INDICATOR, 1, [Have AppIndicator])
+	fi
 fi
 AM_CONDITIONAL(HAVE_INDICATOR, test "x$enable_indicator" = "xyes")
 

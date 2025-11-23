@@ -1,7 +1,12 @@
 [Desktop Entry]
 Type=Application
+Version=1.0
 Name=Synapse
+GenericName=Application Launcher
 Comment=Search everything you do.
 Exec=synapse
 Icon=synapse
-Categories=GNOME;Utility;
+Terminal=false
+StartupNotify=true
+Categories=GNOME;GTK;Utility;
+Keywords=launcher;search;semantic;find;run;application;

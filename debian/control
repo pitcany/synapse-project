@@ -15,18 +15,17 @@ Build-Depends: debhelper (>= 9),
  libkeybinder-3.0-dev,
  libnotify-dev,
  librest-dev,
- libappindicator3-dev (>= 0.0.7)
-Vcs-Bzr: http://bazaar.launchpad.net/~synapse-core/synapse-project/trunk/
-Vcs-Browser: http://bazaar.launchpad.net/~synapse-core/synapse-project/trunk/files
+ libayatana-appindicator3-dev | libappindicator3-dev (>= 0.0.7)
+Vcs-Git: https://github.com/AyatanaIndicators/synapse-project.git
+Vcs-Browser: https://github.com/AyatanaIndicators/synapse-project
 Homepage: https://launchpad.net/synapse-project
-Standards-Version: 3.9.5
+Standards-Version: 4.6.0
 
 Package: synapse
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
 Recommends: zeitgeist (>= 0.9.14) | zeitgeist-core (>= 0.9.14),
- consolekit,
  pastebinit,
  upower
 Description: semantic file launcher
