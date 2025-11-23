@@ -112,19 +112,23 @@ namespace Synapse
     private void init_indicator ()
     {
       var indicator_menu = new Gtk.Menu ();
-      var activate_item = new Gtk.ImageMenuItem.with_label (_("Activate"));
-      activate_item.set_image (new Gtk.Image.from_stock (Gtk.Stock.EXECUTE, Gtk.IconSize.MENU));
+
+      // Use modern Gtk.MenuItem instead of deprecated Gtk.ImageMenuItem
+      var activate_item = new Gtk.MenuItem.with_label (_("Activate"));
       activate_item.activate.connect (() => {
         show_ui ();
       });
       indicator_menu.append (activate_item);
-      var settings_item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
+
+      var settings_item = new Gtk.MenuItem.with_label (_("Preferences"));
       settings_item.activate.connect (() => {
         settings.show ();
       });
       indicator_menu.append (settings_item);
+
       indicator_menu.append (new Gtk.SeparatorMenuItem ());
-      var quit_item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
+
+      var quit_item = new Gtk.MenuItem.with_label (_("Quit"));
       quit_item.activate.connect (Gtk.main_quit);
       indicator_menu.append (quit_item);
       indicator_menu.show_all ();
@@ -272,15 +276,47 @@ namespace Synapse
 
     private static void load_custom_style ()
     {
-      string custom_gtkrc =
+      // GTK3: Load custom CSS instead of deprecated gtkrc
+      string custom_css =
+        Path.build_filename (Environment.get_user_config_dir (),
+                             "synapse",
+                             "synapse.css");
+
+      // Also check for legacy gtkrc location (now treated as CSS)
+      string legacy_gtkrc =
         Path.build_filename (Environment.get_user_config_dir (),
                              "synapse",
                              "gtkrc");
 
-      if (FileUtils.test (custom_gtkrc, FileTest.EXISTS))
+      string style_file = null;
+      if (FileUtils.test (custom_css, FileTest.EXISTS))
       {
-        Gtk.rc_add_default_file (custom_gtkrc);
-        Gtk.rc_reparse_all ();
+        style_file = custom_css;
+      }
+      else if (FileUtils.test (legacy_gtkrc, FileTest.EXISTS))
+      {
+        // Note: Legacy gtkrc files won't work - only CSS is supported in GTK3
+        warning ("Found legacy gtkrc file at %s. GTK3 uses CSS for styling. " +
+                 "Please migrate your custom styles to %s", legacy_gtkrc, custom_css);
+      }
+
+      if (style_file != null)
+      {
+        try
+        {
+          var provider = new Gtk.CssProvider ();
+          provider.load_from_path (style_file);
+          Gtk.StyleContext.add_provider_for_screen (
+            Gdk.Screen.get_default (),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+          );
+          message ("Loaded custom CSS from %s", style_file);
+        }
+        catch (Error e)
+        {
+          warning ("Failed to load custom CSS from %s: %s", style_file, e.message);
+        }
       }
     }
 

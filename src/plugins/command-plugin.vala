@@ -154,8 +154,54 @@ namespace Synapse
 
         if (valid_cmd != null)
         {
-          // don't allow dangerous commands
-          if (args[0] == "rm") return null;
+          // Security: don't allow dangerous/destructive commands
+          // This is a safety measure to prevent accidental data loss
+          string[] dangerous_commands = {
+            "rm",           // file deletion
+            "rmdir",        // directory deletion
+            "dd",           // raw disk operations
+            "mkfs",         // filesystem creation (destroys data)
+            "shred",        // secure file deletion
+            "wipefs",       // wipe filesystem signatures
+            "fdisk",        // disk partitioning
+            "parted",       // disk partitioning
+            "mkswap",       // swap creation
+            "format",       // disk formatting
+            ":(){ :|:& };:", // fork bomb pattern
+            "chmod",        // permission changes (can break system)
+            "chown",        // ownership changes
+            "kill",         // process termination
+            "killall",      // mass process termination
+            "pkill",        // pattern-based process kill
+            "reboot",       // system reboot
+            "shutdown",     // system shutdown
+            "halt",         // system halt
+            "poweroff",     // power off
+            "init"          // init system changes
+          };
+
+          foreach (string dangerous in dangerous_commands)
+          {
+            if (args[0] == dangerous)
+            {
+              debug ("Blocked dangerous command: %s", args[0]);
+              return null;
+            }
+          }
+
+          // Also block sudo with any dangerous command
+          if (args[0] == "sudo" && args.length > 1)
+          {
+            foreach (string dangerous in dangerous_commands)
+            {
+              if (args[1] == dangerous)
+              {
+                debug ("Blocked dangerous sudo command: sudo %s", args[1]);
+                return null;
+              }
+            }
+          }
+
           CommandObject? co = create_co (stripped);
           if (co == null) return null;
           result.add (co, MatchScore.POOR);

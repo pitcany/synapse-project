@@ -100,10 +100,31 @@ namespace Synapse
             foreach (var host in line.split (" "))
             {
               string host_stripped = host.strip ();
-              if (host_stripped != "" && host_stripped.index_of ("*") == -1 && host_stripped.index_of ("?") == -1)
+              // Skip wildcards and empty entries
+              if (host_stripped == "" || host_stripped.index_of ("*") != -1 || host_stripped.index_of ("?") != -1)
+                continue;
+
+              // Security: validate hostname characters at parse time
+              // Only allow safe characters to prevent command injection
+              bool is_safe = true;
+              for (int i = 0; i < host_stripped.length && is_safe; i++)
+              {
+                unichar c = host_stripped.get_char (host_stripped.index_of_nth_char (i));
+                if (!c.isalnum () && c != '.' && c != '-' && c != '_' && c != '@')
+                  is_safe = false;
+              }
+              // Don't allow hostnames starting with - (could be interpreted as flag)
+              if (host_stripped.has_prefix ("-"))
+                is_safe = false;
+
+              if (is_safe)
               {
                 debug ("host added: %s\n", host_stripped);
                 hosts.set (host_stripped, new SshHost (host_stripped));
+              }
+              else
+              {
+                warning ("SSH: Skipping potentially unsafe hostname: %s", host_stripped);
               }
             }
           }
@@ -166,9 +187,40 @@ namespace Synapse
     {
       public string host_query { get; construct set; }
 
+      // Validate hostname to prevent command injection
+      // SSH hostnames can contain alphanumeric, dots, hyphens, and underscores
+      private static bool is_safe_hostname (string hostname)
+      {
+        if (hostname == null || hostname.length == 0 || hostname.length > 255)
+          return false;
+
+        // Allow alphanumeric, dots, hyphens, underscores, and @ for user@host
+        for (int i = 0; i < hostname.length; i++)
+        {
+          unichar c = hostname.get_char (hostname.index_of_nth_char (i));
+          if (!c.isalnum () && c != '.' && c != '-' && c != '_' && c != '@')
+            return false;
+        }
+
+        // Don't allow starting with - (could be interpreted as flag)
+        if (hostname.has_prefix ("-"))
+          return false;
+
+        return true;
+      }
+
       public override void do_action ()
       {
-        Utils.open_command_line ("ssh %s".printf (title), null, true);
+        // Security: validate hostname before executing
+        if (!is_safe_hostname (title))
+        {
+          warning ("SSH: Refusing to connect to potentially unsafe hostname: %s", title);
+          return;
+        }
+
+        // Use shell quoting to prevent injection
+        string escaped_host = Shell.quote (title);
+        Utils.open_command_line ("ssh %s".printf (escaped_host), null, true);
       }
 
       public SshHost (string host_name)
