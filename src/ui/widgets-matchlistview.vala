@@ -728,7 +728,8 @@ namespace Synapse.Gui
         dragdrop_name = "";
         dragdrop_uri = "";
         Gtk.drag_source_set_target_list (this, tl);
-        Gtk.drag_source_set_icon_stock (this, Gtk.Stock.MISSING_IMAGE);
+        // Use named icon instead of deprecated Gtk.Stock
+        Gtk.drag_source_set_icon_name (this, "image-missing");
         return true;
       }
 
@@ -768,7 +769,8 @@ namespace Synapse.Gui
       if (um == null)
       {
         Gtk.drag_source_set_target_list (this, tl);
-        Gtk.drag_source_set_icon_stock (this, Gtk.Stock.MISSING_IMAGE);
+        // Use named icon instead of deprecated Gtk.Stock
+        Gtk.drag_source_set_icon_name (this, "image-missing");
         dragdrop_name = "";
         dragdrop_uri = "";
         return true;

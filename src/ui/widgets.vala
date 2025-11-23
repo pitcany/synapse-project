@@ -1009,13 +1009,14 @@ namespace Synapse.Gui
       menu = new Gtk.Menu ();
       Gtk.MenuItem item = null;
 
-      item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
+      // Use modern Gtk.MenuItem instead of deprecated Gtk.ImageMenuItem
+      item = new Gtk.MenuItem.with_label (_("Preferences"));
       item.activate.connect (() => {
         settings_clicked ();
       });
       menu.append (item);
 
-      item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
+      item = new Gtk.MenuItem.with_label (_("About"));
       item.activate.connect (() => {
         var about = new SynapseAboutDialog ();
         about.run ();
@@ -1026,7 +1027,7 @@ namespace Synapse.Gui
       item = new Gtk.SeparatorMenuItem ();
       menu.append (item);
 
-      item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
+      item = new Gtk.MenuItem.with_label (_("Quit"));
       item.activate.connect (Gtk.main_quit);
       menu.append (item);
 

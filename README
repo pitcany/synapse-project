@@ -71,7 +71,19 @@ Configuration files are stored in `~/.config/synapse/`.
 
 ### Custom GTK Style
 
-You can add a custom GTK style by creating `~/.config/synapse/gtkrc`.
+You can customize Synapse's appearance by creating `~/.config/synapse/synapse.css`.
+
+Example CSS file:
+```css
+/* Custom Synapse styling */
+.synapse-window {
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+}
+```
+
+**Note:** Legacy `gtkrc` files are no longer supported in GTK3. Please migrate
+to CSS if you have an existing gtkrc configuration.
 
 ## Known Issues on Ubuntu 22.04
 

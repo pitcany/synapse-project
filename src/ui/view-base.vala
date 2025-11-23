@@ -503,7 +503,8 @@ namespace Synapse
         dragdrop_name = "";
         dragdrop_uri = "";
         Gtk.drag_source_set_target_list (w, tl);
-        Gtk.drag_source_set_icon_stock (w, Gtk.Stock.MISSING_IMAGE);
+        // Use named icon instead of deprecated Gtk.Stock
+        Gtk.drag_source_set_icon_name (w, "image-missing");
         return false;
       }
 
@@ -513,7 +514,8 @@ namespace Synapse
         dragdrop_name = "";
         dragdrop_uri = "";
         Gtk.drag_source_set_target_list (w, tl);
-        Gtk.drag_source_set_icon_stock (w, Gtk.Stock.MISSING_IMAGE);
+        // Use named icon instead of deprecated Gtk.Stock
+        Gtk.drag_source_set_icon_name (w, "image-missing");
         return false;
       }
 

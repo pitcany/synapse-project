@@ -45,8 +45,9 @@ namespace UI.Widgets
     {
       GLib.Object (n_rows: 3, n_columns: 3, homogeneous: false);
 
-      add_image = new Gtk.Image.from_stock (obj.add_button_stock, Gtk.IconSize.SMALL_TOOLBAR);
-      remove_image = new Gtk.Image.from_stock (obj.remove_button_stock, Gtk.IconSize.SMALL_TOOLBAR);
+      // Use icon names instead of deprecated Gtk.Stock
+      add_image = new Gtk.Image.from_icon_name (obj.add_button_icon, Gtk.IconSize.SMALL_TOOLBAR);
+      remove_image = new Gtk.Image.from_icon_name (obj.remove_button_icon, Gtk.IconSize.SMALL_TOOLBAR);
 
       owned_object = obj;
       owned_object.icon_updated.connect (this.set_image);
@@ -221,7 +222,8 @@ namespace UI.Widgets
           }
           catch (GLib.Error err)
           {
-            temp_pb = it.load_icon (Gtk.Stock.FILE,
+            // Use named icon instead of deprecated Gtk.Stock.FILE
+            temp_pb = it.load_icon ("text-x-generic",
                                     icon_size,
                                     Gtk.IconLookupFlags.FORCE_SIZE);
           }

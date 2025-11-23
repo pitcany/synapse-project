@@ -55,10 +55,24 @@ namespace Synapse
       }
 
       private Rest.Proxy proxy;
+      private string? client_id;
 
       construct
       {
-        proxy = new Rest.Proxy ("http://api.imgur.com/2/", false);
+        proxy = new Rest.Proxy ("https://api.imgur.com/3/", false);
+        // API key must be provided via environment variable for security
+        // Users need to register at https://api.imgur.com/oauth2/addclient
+        client_id = Environment.get_variable ("SYNAPSE_IMGUR_CLIENT_ID");
+        if (client_id == null || client_id == "")
+        {
+          warning ("Imgur plugin: SYNAPSE_IMGUR_CLIENT_ID environment variable not set. " +
+                   "Get a client ID from https://api.imgur.com/oauth2/addclient");
+        }
+      }
+
+      public bool is_configured ()
+      {
+        return client_id != null && client_id != "";
       }
 
       private async string? upload_file (string uri) throws Error
@@ -87,12 +101,21 @@ namespace Synapse
         size_t enc_close = Base64.encode_close (false, encode_buffer, ref state, ref save);
         encoded.append_len ((string) encode_buffer, (ssize_t) enc_close);
 
+        // Check if API is configured
+        if (!is_configured ())
+        {
+          throw new UploadError.UNKNOWN_ERROR (
+            "Imgur not configured. Set SYNAPSE_IMGUR_CLIENT_ID environment variable.");
+        }
+
         var call = proxy.new_call ();
 
         call.set_method ("POST");
-        call.set_function ("upload.json");
-        call.add_param ("key", "ae208d46a27310d4758e462a05c7f12e");
+        call.set_function ("image");
+        // Use Authorization header with Client-ID (API v3)
+        call.add_header ("Authorization", "Client-ID %s".printf (client_id));
         call.add_param ("image", encoded.str);
+        call.add_param ("type", "base64");
 
         Error? err = null;
 
@@ -134,16 +157,17 @@ namespace Synapse
         var parser = new Json.Parser ();
         parser.load_from_data (call.get_payload (), (ssize_t)call.get_payload_length ());
 
-        unowned Json.Object node_obj = parser.get_root ().get_object ();
-        if (node_obj != null)
+        unowned Json.Object root_obj = parser.get_root ().get_object ();
+        if (root_obj != null)
         {
-          node_obj = node_obj.get_object_member ("upload");
-          if (node_obj != null)
+          // API v3 response format: { "data": { "link": "..." }, "success": true }
+          bool success = root_obj.get_boolean_member ("success");
+          if (success)
           {
-            node_obj = node_obj.get_object_member ("links");
-            if (node_obj != null)
+            unowned Json.Object data_obj = root_obj.get_object_member ("data");
+            if (data_obj != null && data_obj.has_member ("link"))
             {
-              return node_obj.get_string_member ("imgur_page");
+              return data_obj.get_string_member ("link");
             }
           }
         }
@@ -209,6 +233,10 @@ namespace Synapse
 
       public override bool valid_for_match (Match match)
       {
+        // Check if plugin is properly configured
+        if (!is_configured ())
+          return false;
+
         unowned UriMatch? um = match as UriMatch;
         if (um == null)
           return false;
