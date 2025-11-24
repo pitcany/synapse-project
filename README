@@ -4,11 +4,11 @@ Synapse is a semantic launcher written in Vala that you can use to start
 applications as well as find and access relevant documents and files by
 making use of the Zeitgeist engine.
 
-## Building on Ubuntu 22.04 (Jammy Jellyfish)
+## Building on Ubuntu 22.04+ (Jammy Jellyfish and newer)
 
 ### Prerequisites
 
-Install the required build dependencies:
+**Required build tools:**
 
 ```bash
 sudo apt update && sudo apt install -y \
@@ -19,21 +19,35 @@ sudo apt update && sudo apt install -y \
   pkg-config \
   gettext \
   autopoint \
-  gnome-common \
-  valac \
-  libglib2.0-dev \
+  valac
+```
+
+**Required libraries:**
+
+```bash
+sudo apt install -y \
   libgtk-3-dev \
   libgee-0.8-dev \
   libjson-glib-dev \
   libkeybinder-3.0-dev \
-  libnotify-dev \
-  libzeitgeist-2.0-dev \
-  libayatana-appindicator3-dev \
-  librest-dev \
-  libdbus-glib-1-dev
+  libnotify-dev
 ```
 
-Install recommended runtime dependencies:
+**Recommended (for smart search ranking via activity tracking):**
+
+```bash
+sudo apt install -y libzeitgeist-2.0-dev
+```
+
+To build without Zeitgeist, pass `--enable-zeitgeist=no` to `./autogen.sh`.
+
+**Optional (for system tray indicator and REST-based plugins):**
+
+```bash
+sudo apt install -y libayatana-appindicator3-dev librest-dev
+```
+
+**Runtime dependencies:**
 
 ```bash
 sudo apt install -y zeitgeist pastebinit
